@@ -27,6 +27,18 @@ const router = createRouter({
                     name: 'supervisor-manage',
                     component: () => import('../views/SupervisorManageView.vue'),
                     meta: { requiresAuth: true, title: '公众监督员管理' }
+                },
+                {
+                    path: 'feedback-list',
+                    name: 'feedback-list',
+                    component: () => import('../views/FeedbackListView.vue'),
+                    meta: { requiresAuth: true, title: '公众监督数据列表' }
+                },
+                {
+                    path: 'aqi-confirmed-list',
+                    name: 'aqi-confirmed-list',
+                    component: () => import('../views/AqiConfirmedListView.vue'),
+                    meta: { requiresAuth: true, title: '网格员确认AQI数据列表' }
                 }
             ]
         },
