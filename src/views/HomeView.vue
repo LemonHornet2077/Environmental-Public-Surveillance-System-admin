@@ -28,7 +28,7 @@
                             </el-menu-item>
                             
                             <!-- 有子菜单的菜单项 -->
-                            <el-submenu 
+                            <el-sub-menu 
                                 v-else 
                                 :index="'submenu-' + index"
                             >
@@ -44,7 +44,7 @@
                                 >
                                     <span>{{ subItem.title }}</span>
                                 </el-menu-item>
-                            </el-submenu>
+                            </el-sub-menu>
                         </template>
                     </el-menu>
                 </el-aside>

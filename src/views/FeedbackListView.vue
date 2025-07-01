@@ -2,7 +2,27 @@
     <div class="feedback-list-container">
         <div class="page-header">
             <h2>公众监督数据列表</h2>
-            <el-button type="primary" @click="fetchFeedbackList">刷新数据</el-button>
+            <div class="filter-container">
+                <el-select v-model="selectedProvince" placeholder="选择省份" clearable @change="handleProvinceChange">
+                    <el-option 
+                        v-for="province in provinceList" 
+                        :key="province.province_id" 
+                        :label="province.province_name" 
+                        :value="province.province_id" 
+                    />
+                </el-select>
+                <el-select v-model="selectedCity" placeholder="选择城市" clearable :disabled="!selectedProvince">
+                    <el-option 
+                        v-for="city in cityList" 
+                        :key="city.city_id" 
+                        :label="city.city_name" 
+                        :value="city.city_id" 
+                    />
+                </el-select>
+                <el-button type="primary" @click="handleSearch">查询</el-button>
+                <el-button @click="handleReset">重置</el-button>
+                <el-button type="success" @click="fetchFeedbackList">刷新数据</el-button>
+            </div>
         </div>
 
         <el-card class="table-card">
@@ -64,6 +84,11 @@
                     min-width="150"
                     show-overflow-tooltip
                 />
+                <el-table-column label="操作" width="120">
+                    <template #default="scope">
+                        <el-button size="small" type="primary" @click="showDetail(scope.row)">查看详情</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
 
             <div class="pagination-container">
@@ -78,12 +103,20 @@
             </div>
         </el-card>
     </div>
+    
+    <!-- 详情对话框 -->
+    <FeedbackDetailDialog
+        v-model:visible="detailDialogVisible"
+        :feedback-data="currentFeedback"
+        @close="closeDetailDialog"
+    />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import request from '../api/request'
+import FeedbackDetailDialog from '../components/FeedbackDetailDialog.vue'
 
 // 定义反馈数据类型
 interface Feedback {
@@ -113,6 +146,16 @@ const loading = ref(true)
 const total = ref(0)
 const currentPage = ref(1)
 const pageSize = ref(10)
+
+// 省市选择器
+const provinceList = ref<any[]>([])
+const cityList = ref<any[]>([])
+const selectedProvince = ref<number | null>(null)
+const selectedCity = ref<number | null>(null)
+
+// 详情对话框
+const detailDialogVisible = ref(false)
+const currentFeedback = ref<any>(null)
 
 // 状态映射
 const stateMap = {
@@ -145,21 +188,24 @@ const formatDateTime = (date: string, time: string) => {
 const fetchFeedbackList = async () => {
     loading.value = true
     try {
-        const token = localStorage.getItem('token')
-        if (!token) {
-            ElMessage.error('未登录或登录已过期')
-            return
+        // 构建查询参数
+        const params: Record<string, number> = {}
+        if (selectedProvince.value) {
+            params['province_id'] = selectedProvince.value
+            if (selectedCity.value) {
+                params['city_id'] = selectedCity.value
+            }
         }
 
-        const response = await axios.get('http://localhost:3000/api/v1/admin/feedback/list', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+        const response = await request({
+            url: '/admin/feedback/list',
+            method: 'get',
+            params
         })
 
-        if (response.data && response.data.data) {
-            tableData.value = response.data.data
-            total.value = response.data.data.length
+        if (response && response.data) {
+            tableData.value = response.data
+            total.value = response.data.length
         }
     } catch (error) {
         console.error('获取反馈数据失败:', error)
@@ -169,8 +215,78 @@ const fetchFeedbackList = async () => {
     }
 }
 
+// 获取省份列表
+const fetchProvinces = async () => {
+    try {
+        const response = await request({
+            url: '/admin/location/provinces',
+            method: 'get'
+        })
+
+        if (response && response.data) {
+            provinceList.value = response.data
+        }
+    } catch (error) {
+        console.error('获取省份列表失败:', error)
+    }
+}
+
+// 获取城市列表
+const fetchCities = async (provinceId: number) => {
+    try {
+        const response = await request({
+            url: `/admin/location/cities/${provinceId}`,
+            method: 'get'
+        })
+
+        if (response && response.data) {
+            cityList.value = response.data
+        }
+    } catch (error) {
+        console.error('获取城市列表失败:', error)
+    }
+}
+
+// 处理省份选择变化
+const handleProvinceChange = (value: number | null) => {
+    selectedCity.value = null
+    cityList.value = []
+    
+    if (value) {
+        fetchCities(value)
+    }
+}
+
+// 处理查询按钮点击
+const handleSearch = () => {
+    currentPage.value = 1 // 重置到第一页
+    fetchFeedbackList()
+}
+
+// 处理重置按钮点击
+const handleReset = () => {
+    selectedProvince.value = null
+    selectedCity.value = null
+    cityList.value = []
+    currentPage.value = 1
+    fetchFeedbackList()
+}
+
+// 显示详情对话框
+const showDetail = (row: any) => {
+    currentFeedback.value = row
+    detailDialogVisible.value = true
+}
+
+// 关闭详情对话框
+const closeDetailDialog = () => {
+    detailDialogVisible.value = false
+    currentFeedback.value = null
+}
+
 // 页面加载时获取数据
 onMounted(() => {
+    fetchProvinces()
     fetchFeedbackList()
 })
 </script>
