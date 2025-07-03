@@ -39,6 +39,36 @@ const router = createRouter({
                     name: 'aqi-confirmed-list',
                     component: () => import('../views/AqiConfirmedListView.vue'),
                     meta: { requiresAuth: true, title: '网格员确认AQI数据列表' }
+                },
+                {
+                    path: 'stats-province',
+                    name: 'stats-province',
+                    component: () => import('../views/stats/ProvinceStatsView.vue'),
+                    meta: { requiresAuth: true, title: '省分组检查统计' }
+                },
+                {
+                    path: 'stats-aqi-level',
+                    name: 'stats-aqi-level',
+                    component: () => import('../views/stats/AqiLevelStatsView.vue'),
+                    meta: { requiresAuth: true, title: 'AQI指数分布统计' }
+                },
+                {
+                    path: 'stats-aqi-trend',
+                    name: 'stats-aqi-trend',
+                    component: () => import('../views/stats/AqiTrendStatsView.vue'),
+                    meta: { requiresAuth: true, title: 'AQI指数趋势统计' }
+                },
+                {
+                    path: 'stats-aqi-realtime',
+                    name: 'stats-aqi-realtime',
+                    component: () => import('../views/stats/AqiRealtimeStatsView.vue'),
+                    meta: { requiresAuth: true, title: '空气质量检测数量实时统计' }
+                },
+                {
+                    path: 'dashboard',
+                    name: 'dashboard',
+                    component: () => import('../views/dashboard/DashboardView.vue'),
+                    meta: { requiresAuth: true, title: '数据可视化大屏' }
                 }
             ]
         },

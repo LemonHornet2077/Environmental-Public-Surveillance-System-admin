@@ -9,7 +9,7 @@
             <el-table-column prop="id" label="ID" width="80" />
             <el-table-column prop="admin_code" label="管理员账号" width="150" />
             <el-table-column prop="real_name" label="姓名" width="120" />
-            <el-table-column prop="created_at" label="创建时间" :formatter="formatDate" />
+            
             <el-table-column label="操作" width="120">
                 <template #default="scope">
                     <el-button

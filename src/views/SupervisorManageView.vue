@@ -12,7 +12,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="remarks" label="备注" />
-            <el-table-column prop="created_at" label="注册时间" :formatter="formatDate" />
+            
             <el-table-column label="操作" width="120">
                 <template #default="scope">
                     <el-button

@@ -235,7 +235,8 @@ const submitAssign = async () => {
             const res = await request.post<ApiResponse>('/admin/feedback/assign', {
                 feedback_id: assignForm.feedback_id,
                 grid_member_id: assignForm.grid_member_id,
-                remarks: assignForm.remarks
+                remarks: assignForm.remarks,
+                remote_assign: remoteAssign.value // 添加异地指派标志
             })
             
             if (res.data.success) {

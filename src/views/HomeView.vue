@@ -78,6 +78,7 @@ const activeMenu = ref('admin-manage')
 
 // 导航菜单项
 const menuItems = [
+    { path: '/dashboard', title: '数据可视化大屏', icon: 'el-icon-monitor' },
     { path: '/admin-manage', title: '管理员管理', icon: 'el-icon-user' },
     { path: '/member-manage', title: '网格员管理', icon: 'el-icon-s-custom' },
     { path: '/supervisor-manage', title: '公众监督员管理', icon: 'el-icon-s-check' },
@@ -87,6 +88,16 @@ const menuItems = [
         children: [
             { path: '/feedback-list', title: '公众监督数据列表' },
             { path: '/aqi-confirmed-list', title: '网格员确认AQI数据列表' }
+        ]
+    },
+    { 
+        title: '统计数据管理', 
+        icon: 'el-icon-s-data',
+        children: [
+            { path: '/stats-province', title: '省分组检查统计' },
+            { path: '/stats-aqi-level', title: 'AQI指数分布统计' },
+            { path: '/stats-aqi-trend', title: 'AQI指数趋势统计' },
+            { path: '/stats-aqi-realtime', title: '空气质量检测数量实时统计' }
         ]
     },
 ]
