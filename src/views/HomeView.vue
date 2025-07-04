@@ -78,7 +78,7 @@ const activeMenu = ref('admin-manage')
 
 // 导航菜单项
 const menuItems = [
-    { path: '/dashboard', title: '数据可视化大屏', icon: 'el-icon-monitor' },
+    { path: '/dashboard', title: '数据可视化大屏', icon: 'el-icon-monitor' }, // 独立路由，不是子路由
     { path: '/admin-manage', title: '管理员管理', icon: 'el-icon-user' },
     { path: '/member-manage', title: '网格员管理', icon: 'el-icon-s-custom' },
     { path: '/supervisor-manage', title: '公众监督员管理', icon: 'el-icon-s-check' },

@@ -63,14 +63,14 @@ const router = createRouter({
                     name: 'stats-aqi-realtime',
                     component: () => import('../views/stats/AqiRealtimeStatsView.vue'),
                     meta: { requiresAuth: true, title: '空气质量检测数量实时统计' }
-                },
-                {
-                    path: 'dashboard',
-                    name: 'dashboard',
-                    component: () => import('../views/dashboard/DashboardView.vue'),
-                    meta: { requiresAuth: true, title: '数据可视化大屏' }
                 }
             ]
+        },
+        {
+            path: '/dashboard',
+            name: 'dashboard',
+            component: () => import('../views/dashboard/DashboardView.vue'),
+            meta: { requiresAuth: true, title: '数据可视化大屏' }
         },
         {
             path: '/login',
