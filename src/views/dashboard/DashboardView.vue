@@ -8,121 +8,149 @@
             </div>
         </div>
 
-        <div class="dashboard-grid">
-            <!-- 省分组AQI统计 -->
-            <el-card class="dashboard-card province-stats">
-                <template #header>
-                    <div class="card-header">
-                        <span>各省份AQI超标统计</span>
-                    </div>
-                </template>
-                <div v-if="loading.province" class="loading-container">
-                    <el-skeleton :rows="3" animated />
-                </div>
-                <div v-else class="chart-container" ref="provinceChartRef"></div>
-            </el-card>
+        <div class="dashboard-container-inner">
+            <div class="dashboard-layout">
+                <!-- 左侧图表 -->
+                <div class="dashboard-side left-side">
+                    <!-- 省分组AQI统计 -->
+                    <el-card class="dashboard-card province-stats">
+                        <template #header>
+                            <div class="card-header">
+                                <span>各省份AQI超标统计</span>
+                            </div>
+                        </template>
+                        <div v-if="loading.province" class="loading-container">
+                            <el-skeleton :rows="3" animated />
+                        </div>
+                        <div v-else class="chart-container" ref="provinceChartRef"></div>
+                    </el-card>
 
-            <!-- AQI指数分布统计 -->
-            <el-card class="dashboard-card aqi-level-stats">
-                <template #header>
-                    <div class="card-header">
-                        <span>AQI空气质量指数级别分布</span>
-                    </div>
-                </template>
-                <div v-if="loading.level" class="loading-container">
-                    <el-skeleton :rows="3" animated />
-                </div>
-                <div v-else class="chart-container" ref="levelChartRef"></div>
-            </el-card>
+                    <!-- AQI指数分布统计 -->
+                    <el-card class="dashboard-card aqi-level-stats">
+                        <template #header>
+                            <div class="card-header">
+                                <span>AQI空气质量指数级别分布</span>
+                            </div>
+                        </template>
+                        <div v-if="loading.level" class="loading-container">
+                            <el-skeleton :rows="3" animated />
+                        </div>
+                        <div v-else class="chart-container" ref="levelChartRef"></div>
+                    </el-card>
 
-            <!-- AQI指数趋势统计 -->
-            <el-card class="dashboard-card aqi-trend-stats">
-                <template #header>
-                    <div class="card-header">
-                        <span>AQI空气质量指数超标趋势</span>
-                    </div>
-                </template>
-                <div v-if="loading.trend" class="loading-container">
-                    <el-skeleton :rows="3" animated />
+                    <!-- SO2二氧化硫浓度超标统计 -->
+                    <el-card class="dashboard-card so2-stats">
+                        <template #header>
+                            <div class="card-header">
+                                <span>SO2二氧化硫浓度超标统计</span>
+                            </div>
+                        </template>
+                        <div v-if="loading.province" class="loading-container">
+                            <el-skeleton :rows="3" animated />
+                        </div>
+                        <div v-else class="chart-container" ref="so2ChartRef"></div>
+                    </el-card>
                 </div>
-                <div v-else class="chart-container" ref="trendChartRef"></div>
-            </el-card>
 
-            <!-- 检测数量实时统计 -->
-            <el-card class="dashboard-card realtime-stats">
-                <template #header>
-                    <div class="card-header">
-                        <span>空气质量检测数量实时统计</span>
-                    </div>
-                </template>
-                <div v-if="loading.realtime" class="loading-container">
-                    <el-skeleton :rows="3" animated />
+                <!-- 中间地图 -->
+                <div class="dashboard-center">
+                    <!-- 中国地图 - AQI超标情况 -->
+                    <el-card class="dashboard-card china-map">
+                        <template #header>
+                            <div class="card-header">
+                                <span>全国各省份AQI超标情况分布图</span>
+                                <el-tooltip content="颜色越深表示AQI超标数量越多" placement="top">
+                                    <el-icon><InfoFilled /></el-icon>
+                                </el-tooltip>
+                            </div>
+                        </template>
+                        <div v-if="loading.province" class="loading-container">
+                            <el-skeleton :rows="3" animated />
+                        </div>
+                        <div v-else class="chart-container" ref="mapChartRef"></div>
+                    </el-card>
                 </div>
-                <div v-else class="realtime-data">
-                    <div class="data-card total">
-                        <div class="data-value">{{ realtimeStats.totalCount }}</div>
-                        <div class="data-label">总检测数量</div>
-                    </div>
-                    <div class="data-card good">
-                        <div class="data-value">{{ realtimeStats.goodCount }}</div>
-                        <div class="data-label">良好检测数量</div>
-                        <div class="data-percent">{{ realtimeStats.goodPercent }}%</div>
-                    </div>
-                    <div class="data-card exceed">
-                        <div class="data-value">{{ realtimeStats.exceedingCount }}</div>
-                        <div class="data-label">超标检测数量</div>
-                        <div class="data-percent">{{ realtimeStats.exceedPercent }}%</div>
-                    </div>
-                </div>
-            </el-card>
 
-            <!-- SO2二氧化硫浓度超标统计 -->
-            <el-card class="dashboard-card so2-stats">
-                <template #header>
-                    <div class="card-header">
-                        <span>SO2二氧化硫浓度超标统计</span>
-                    </div>
-                </template>
-                <div v-if="loading.province" class="loading-container">
-                    <el-skeleton :rows="3" animated />
-                </div>
-                <div v-else class="chart-container" ref="so2ChartRef"></div>
-            </el-card>
+                <!-- 右侧图表 -->
+                <div class="dashboard-side right-side">
+                    <!-- AQI指数趋势统计 -->
+                    <el-card class="dashboard-card aqi-trend-stats">
+                        <template #header>
+                            <div class="card-header">
+                                <span>AQI空气质量指数超标趋势</span>
+                            </div>
+                        </template>
+                        <div v-if="loading.trend" class="loading-container">
+                            <el-skeleton :rows="3" animated />
+                        </div>
+                        <div v-else class="chart-container" ref="trendChartRef"></div>
+                    </el-card>
 
-            <!-- PM2.5悬浮颗粒物浓度超标统计 -->
-            <el-card class="dashboard-card pm25-stats">
-                <template #header>
-                    <div class="card-header">
-                        <span>PM2.5悬浮颗粒物浓度超标统计</span>
-                    </div>
-                </template>
-                <div v-if="loading.province" class="loading-container">
-                    <el-skeleton :rows="3" animated />
-                </div>
-                <div v-else class="chart-container" ref="pm25ChartRef"></div>
-            </el-card>
+                    <!-- 检测数量实时统计 -->
+                    <el-card class="dashboard-card realtime-stats">
+                        <template #header>
+                            <div class="card-header">
+                                <span>空气质量检测数量实时统计</span>
+                            </div>
+                        </template>
+                        <div v-if="loading.realtime" class="loading-container">
+                            <el-skeleton :rows="3" animated />
+                        </div>
+                        <div v-else class="realtime-data">
+                            <div class="data-card total">
+                                <div class="data-value">{{ realtimeStats.totalCount }}</div>
+                                <div class="data-label">总检测数量</div>
+                            </div>
+                            <div class="data-card good">
+                                <div class="data-value">{{ realtimeStats.goodCount }}</div>
+                                <div class="data-label">良好检测数量</div>
+                                <div class="data-percent">{{ realtimeStats.goodPercent }}%</div>
+                            </div>
+                            <div class="data-card exceed">
+                                <div class="data-value">{{ realtimeStats.exceedingCount }}</div>
+                                <div class="data-label">超标检测数量</div>
+                                <div class="data-percent">{{ realtimeStats.exceedPercent }}%</div>
+                            </div>
+                        </div>
+                    </el-card>
 
-            <!-- CO一氧化碳浓度超标统计 -->
-            <el-card class="dashboard-card co-stats">
-                <template #header>
-                    <div class="card-header">
-                        <span>CO一氧化碳浓度超标统计</span>
-                    </div>
-                </template>
-                <div v-if="loading.province" class="loading-container">
-                    <el-skeleton :rows="3" animated />
+                    <!-- PM2.5浓度超标统计 -->
+                    <el-card class="dashboard-card pm25-stats">
+                        <template #header>
+                            <div class="card-header">
+                                <span>PM2.5浓度超标统计</span>
+                            </div>
+                        </template>
+                        <div v-if="loading.province" class="loading-container">
+                            <el-skeleton :rows="3" animated />
+                        </div>
+                        <div v-else class="chart-container" ref="pm25ChartRef"></div>
+                    </el-card>
+
+                    <!-- CO一氧化碳浓度超标统计 -->
+                    <el-card class="dashboard-card co-stats">
+                        <template #header>
+                            <div class="card-header">
+                                <span>CO一氧化碳浓度超标统计</span>
+                            </div>
+                        </template>
+                        <div v-if="loading.province" class="loading-container">
+                            <el-skeleton :rows="3" animated />
+                        </div>
+                        <div v-else class="chart-container" ref="coChartRef"></div>
+                    </el-card>
                 </div>
-                <div v-else class="chart-container" ref="coChartRef"></div>
-            </el-card>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, onActivated, nextTick } from 'vue'
 import request from '@/api/request'
 import * as echarts from 'echarts'
 import dayjs from 'dayjs'
+import { InfoFilled } from '@element-plus/icons-vue'
 
 // 定义响应式数据
 const currentTime = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
@@ -134,6 +162,7 @@ const loading = ref({
 })
 
 // 图表引用
+const mapChartRef = ref(null)
 const provinceChartRef = ref(null)
 const levelChartRef = ref(null)
 const trendChartRef = ref(null)
@@ -142,6 +171,7 @@ const pm25ChartRef = ref(null)
 const coChartRef = ref(null)
 
 // 图表实例
+let mapChart = null
 let provinceChart = null
 let levelChart = null
 let trendChart = null
@@ -173,6 +203,7 @@ const fetchProvinceStats = async () => {
             provinceStats.value = response.data
             console.log('省份统计数据:', provinceStats.value)
             nextTick(() => {
+                initChinaMap()
                 initProvinceChart()
                 initSO2Chart()
                 initPM25Chart()
@@ -283,6 +314,149 @@ const fetchRealtimeStats = async () => {
         console.error('获取空气质量检测数量实时统计数据失败:', error)
     } finally {
         loading.value.realtime = false
+    }
+}
+
+// 初始化中国地图
+const initChinaMap = async () => {
+    console.log('初始化中国地图, ref:', mapChartRef.value, '数据:', provinceStats.value)
+    if (!mapChartRef.value) {
+        console.error('地图容器引用不存在')
+        return
+    }
+
+    if (mapChart) {
+        mapChart.dispose()
+    }
+
+    mapChart = echarts.init(mapChartRef.value)
+
+    try {
+        // 动态加载中国地图JSON数据
+        const response = await fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json')
+        const chinaGeoJson = await response.json()
+        
+        // 注册地图
+        echarts.registerMap('china', chinaGeoJson)
+        
+        // 准备地图数据
+        const mapData = provinceStats.value.map(item => ({
+            name: item.province_name,
+            value: item.aqi_exceed_count,
+            provinceId: item.province_id,
+            so2Count: item.so2_exceed_count,
+            coCount: item.co_exceed_count,
+            pm25Count: item.pm25_exceed_count
+        }))
+
+        // 计算最大值用于颜色映射
+        const maxValue = Math.max(...mapData.map(item => item.value), 1)
+
+        const option = {
+            title: {
+                text: '全国AQI超标分布',
+                left: 'center',
+                top: '10px',
+                textStyle: {
+                    fontSize: 16,
+                    color: '#333'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    if (params.data) {
+                        return `
+                            <div style="padding: 8px;">
+                                <div style="font-weight: bold; margin-bottom: 5px;">${params.data.name}</div>
+                                <div>AQI超标: <span style="color: #E91E63; font-weight: bold;">${params.data.value}</span> 次</div>
+                                <div>SO2超标: <span style="color: #FF9800;">${params.data.so2Count}</span> 次</div>
+                                <div>PM2.5超标: <span style="color: #9C27B0;">${params.data.pm25Count}</span> 次</div>
+                                <div>CO超标: <span style="color: #607D8B;">${params.data.coCount}</span> 次</div>
+                            </div>
+                        `
+                    } else {
+                        return `${params.name}<br/>暂无数据`
+                    }
+                }
+            },
+            visualMap: {
+                min: 0,
+                max: maxValue,
+                left: '20px',
+                bottom: '20px',
+                text: ['高', '低'],
+                calculable: true,
+                inRange: {
+                    color: ['#e6f3ff', '#cce7ff', '#99d6ff', '#66c2ff', '#33adff', '#0099ff', '#0066cc']
+                },
+                textStyle: {
+                    color: '#333',
+                    fontSize: 12
+                },
+                itemWidth: 15,
+                itemHeight: 120
+            },
+            series: [
+                {
+                    name: 'AQI超标数量',
+                    type: 'map',
+                    map: 'china',
+                    roam: true,
+                    scaleLimit: {
+                        min: 0.8,
+                        max: 2
+                    },
+                    zoom: 1.1,
+                    center: [104, 37.5],
+                    data: mapData,
+                    itemStyle: {
+                        borderColor: '#fff',
+                        borderWidth: 1,
+                        areaColor: '#f0f0f0'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            areaColor: '#ffa500',
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        },
+                        label: {
+                            show: true,
+                            color: '#fff',
+                            fontSize: 12
+                        }
+                    },
+                    label: {
+                        show: false,
+                        color: '#333',
+                        fontSize: 10
+                    }
+                }
+            ]
+        }
+
+        mapChart.setOption(option)
+        
+    } catch (error) {
+        console.error('地图数据加载失败:', error)
+        // 显示错误提示
+        mapChart.setOption({
+            title: {
+                text: '地图数据加载失败',
+                subtext: '请检查网络连接',
+                left: 'center',
+                top: 'center',
+                textStyle: {
+                    fontSize: 16,
+                    color: '#999'
+                },
+                subtextStyle: {
+                    fontSize: 12,
+                    color: '#ccc'
+                }
+            }
+        })
     }
 }
 
@@ -648,6 +822,7 @@ const initTrendChart = () => {
 
 // 处理窗口大小变化
 const handleResize = () => {
+    mapChart?.resize()
     provinceChart?.resize()
     levelChart?.resize()
     trendChart?.resize()
@@ -671,10 +846,16 @@ onMounted(() => {
     refreshAllData()
 
     // 设置定时刷新
-    refreshTimer = setInterval(refreshAllData, 5000)
+    refreshTimer = setInterval(refreshAllData, 50000) 
 
     // 添加窗口大小变化监听
     window.addEventListener('resize', handleResize)
+})
+
+// 当组件被激活时刷新数据（适用于使用keep-alive的情况）
+onActivated(() => {
+    // 每次进入页面时刷新数据
+    refreshAllData()
 })
 
 // 组件卸载时清理资源
@@ -688,6 +869,7 @@ onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
 
     // 销毁图表实例
+    mapChart?.dispose()
     provinceChart?.dispose()
     levelChart?.dispose()
     trendChart?.dispose()
@@ -727,15 +909,41 @@ onUnmounted(() => {
     color: #606266;
 }
 
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 20px;
+/* 三列布局样式 */
+.dashboard-layout {
+    display: flex;
+    gap: 20px;
+    height: calc(100vh - 100px);
+}
+
+.dashboard-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    max-height: 100%;
+    padding-right: 5px; /* 为滚动条预留空间 */
+}
+
+.dashboard-center {
+    flex: 2;
+    max-height: 100%;
+    overflow-y: auto;
+    padding-right: 5px; /* 为滚动条预留空间 */
+}
+
+/* 中国地图卡片特殊样式 */
+.dashboard-card.china-map {
+    height: 100%;
+    margin-bottom: 0;
 }
 
 .dashboard-card {
     margin-bottom: 0;
-    height: 350px;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
 }
 
 .card-header {
@@ -753,16 +961,26 @@ onUnmounted(() => {
 }
 
 .chart-container {
-    height: 280px;
+    flex: 1;
     width: 100%;
     min-height: 280px;
+    overflow: auto; /* 添加滚动条 */
+}
+
+/* 中国地图图表容器特殊样式 */
+.china-map .chart-container {
+    flex: 1;
+    min-height: 430px;
+    overflow: auto; /* 添加滚动条 */
 }
 
 .realtime-data {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: 100%;
+    min-height: 280px;
+    flex: 1;
+    overflow: auto; /* 添加滚动条 */
 }
 
 .data-card {
@@ -807,16 +1025,31 @@ onUnmounted(() => {
     font-weight: bold;
 }
 
-/* 响应式布局 */
-@media (max-width: 1200px) {
-    .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+/* Element Plus行间距 */
+.mt-20 {
+    margin-top: 20px;
 }
 
-@media (max-width: 768px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
+/* 响应式布局 */
+@media (max-width: 1400px) {
+    .dashboard-layout {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .dashboard-side, .dashboard-center {
+        flex: none;
+        width: 100%;
+        max-height: none;
+        overflow: visible;
+    }
+    
+    .dashboard-card.china-map {
+        min-height: 500px;
+    }
+    
+    .chart-container {
+        overflow: auto;
     }
 }
 </style>
